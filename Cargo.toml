@@ -1,0 +1,10 @@
+[package]
+name = "proxy"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# O framework de proxy da Cloudflare com suporte a balanceamento e infraestrutura
+pingora = { version = "=0.8.1", features = ["lb", "openssl"] }
+# Necessário para suportar o uso de funções assíncronas dentro das traits do Pingora
+async-trait = "0.1"
