@@ -3,14 +3,15 @@ use pingora::{
     listeners::tls::TlsSettings,
     prelude::HttpPeer,
     proxy::{ProxyHttp, Session},
-    server::configuration::Opt,
     server::Server,
+    server::configuration::Opt,
 };
 use std::collections::HashMap;
+mod config;
 
 // 1. Definição da estrutura do Proxy
 struct Proxy {
-    addrs: HashMap<String, String>,
+    addrs: Vec<config::Instance>,
 }
 
 // 2. O Contexto (bloco de notas) de cada requisição
@@ -23,7 +24,7 @@ impl Proxy {
     async fn log(&self, session: &mut Session) -> pingora::Result<bool> {
         let mut response = pingora::http::ResponseHeader::build(401, None)?;
         response.insert_header("WWW-Authenticate", "Basic realm=\"Acesso Restrito\"")?;
-        
+
         // Enviamos o cabeçalho e fechamos o stream (true), pois não há corpo HTML aqui
         session
             .write_response_header(Box::new(response), true)
@@ -50,11 +51,11 @@ impl ProxyHttp for Proxy {
         ctx: &mut Self::CTX,
     ) -> pingora::Result<bool> {
         let auth = session.req_header().headers.get("Authorization");
-        
+
         match auth {
             Some(value) => {
                 let value = value.to_str().unwrap_or("");
-                
+
                 // Validação exata da sua string Base64 (mikael:mimadjka 4)
                 if value == "Basic bWlrYWVsOm1pbWFkamthIDQ=" {
                     ctx.authenticated = true;
@@ -75,9 +76,9 @@ impl ProxyHttp for Proxy {
         _ctx: &mut Self::CTX,
     ) -> pingora::Result<Box<HttpPeer>> {
         let path = session.req_header().uri.path();
-        
+
         // Define o destino baseado no começo do caminho (path) da URL
-        let service="127.0.0.1:8000";
+        let service = "127.0.0.1:8000";
         // Cria o peer apontando para o localhost (HTTP puro internamente)
         let peer = HttpPeer::new(service, false, String::new());
         Ok(Box::new(peer))
@@ -95,16 +96,14 @@ fn main() {
     };
 
     // Acopla a lógica do nosso proxy ao serviço HTTP do framework
-    let mut proxy_service = pingora::proxy::http_proxy_service(
-        &server.configuration,
-        meu_proxy,
-    );
-    
+    let mut proxy_service = pingora::proxy::http_proxy_service(&server.configuration, meu_proxy);
+
     // Configuração pública do TLS/SSL utilizando os certificados do Let's Encrypt
-let tls_settings = TlsSettings::intermediate(
+    let tls_settings = TlsSettings::intermediate(
         "/etc/letsencrypt/live/mikaelmenez15.duckdns.org/fullchain.pem",
         "/etc/letsencrypt/live/mikaelmenez15.duckdns.org/privkey.pem",
-    ).expect("Falha ao carregar os certificados SSL");
+    )
+    .expect("Falha ao carregar os certificados SSL");
 
     // 2. Vincula o proxy à porta física 443 com as chaves criptográficas ativas
     proxy_service.add_tls_with_settings("0.0.0.0:443", None, tls_settings);
@@ -114,4 +113,3 @@ let tls_settings = TlsSettings::intermediate(
     server.add_service(proxy_service);
     server.run_forever();
 }
-

@@ -8,3 +8,5 @@ edition = "2024"
 pingora = { version = "=0.8.1", features = ["lb", "openssl"] }
 # Necessário para suportar o uso de funções assíncronas dentro das traits do Pingora
 async-trait = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+toml = "1.1.2"
