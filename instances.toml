@@ -1,0 +1,17 @@
+[[addrs]]
+host="127.0.0.1"
+port=8080
+name="api"
+tags=["backend"]
+
+[[addrs]]
+host="127.0.0.1"
+port=8000
+name="front"
+tags=["frontend"]
+
+[[addrs]]
+host="127.0.0.1"
+port=80
+name="main"
+tags=["Jellyfin"]
