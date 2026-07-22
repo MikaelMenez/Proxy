@@ -81,7 +81,7 @@ impl ProxyHttp for Proxy {
                 let value = value.to_str().unwrap_or("");
 
                 // Validação exata da sua string Base64 (mikael:mimadjka 4)
-                if value == "Basic bWlrYWVsOm1pbWFkamthIDQ=" {
+                if value == "Basic YWRtaW46YWRtaW4xMjM=" {
                     ctx.authenticated = true;
                     Ok(false) // Credenciais corretas! Prossegue para o upstream_peer
                 } else {
@@ -115,7 +115,7 @@ impl ProxyHttp for Proxy {
 
         // Isola o subdomínio
         let subdomain = host_sem_porta
-            .strip_suffix(".mikaelmenez15.duckdns.org")
+            .strip_suffix(".mikaelmenezes.duckdns.org")
             .unwrap_or(""); // Retorna vazio se acessarem pelo IP puro ou raiz
 
         // 3. Busca no HashMap que já está na memória
@@ -160,10 +160,10 @@ fn main() {
     let mut proxy_service = pingora::proxy::http_proxy_service(&server.configuration, meu_proxy);
 
     // Configuração pública do TLS/SSL utilizando os certificados do Let's Encrypt
-    let tls_settings = TlsSettings::intermediate(
-        "/etc/letsencrypt/live/mikaelmenez15.duckdns.org/fullchain.pem",
-        "/etc/letsencrypt/live/mikaelmenez15.duckdns.org/privkey.pem",
-    )
+   let tls_settings = TlsSettings::intermediate(
+    "/etc/letsencrypt/live/mikaelmenezes.duckdns.org/fullchain.pem",
+    "/etc/letsencrypt/live/mikaelmenezes.duckdns.org/privkey.pem",
+)
     .expect("Falha ao carregar os certificados SSL");
 
     // 2. Vincula o proxy à porta física 443 com as chaves criptográficas ativas

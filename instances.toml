@@ -1,17 +1,42 @@
 [[addrs]]
-host="127.0.0.1"
-port=8080
-name="api"
-tags=["backend"]
+host = "127.0.0.1"
+port = 8080
+name = ""
+tags = ["main", "public"]   # Responderá no domínio raiz: mikaelmenezes.duckdns.org
 
 [[addrs]]
-host="127.0.0.1"
-port=8000
-name="front"
-tags=["frontend"]
+host = "127.0.0.1"
+port = 8000
+name = "teste1"
+tags = ["test", "development"] # Responderá em: teste1.mikaelmenezes.duckdns.org
 
 [[addrs]]
-host="127.0.0.1"
-port=80
-name="main"
-tags=["Jellyfin"]
+host = "127.0.0.1"
+port = 8090
+name = "teste2"
+tags = ["test", "development"] # Responderá em: teste2.mikaelmenezes.duckdns.org
+
+[[addrs]]
+host = "127.0.0.1"
+port = 8081
+name = "torrent"
+tags = ["media", "download", "torrent"]
+
+[[addrs]]
+host = "127.0.0.1"
+port = 9696
+name = "prowlarr"
+tags = ["media", "indexer", "manager"]
+
+[[addrs]]
+host = "127.0.0.1"
+port = 7878
+name = "radarr"
+tags = ["media", "movies", "automation"]
+
+[[addrs]]
+host = "127.0.0.1"
+port = 8096
+name = "jellyfin"
+tags = ["media", "streaming", "player"]
+
